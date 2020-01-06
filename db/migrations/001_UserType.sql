@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS user_types (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(31) UNIQUE
+);

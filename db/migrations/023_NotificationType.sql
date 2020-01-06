@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS notification_types (
+    id SERIAL PRIMARY KEY,
+
+    name VARCHAR(63) NOT NULL UNIQUE
+)
