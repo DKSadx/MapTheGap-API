@@ -6,7 +6,7 @@ BEGIN
     IF _unread_only THEN
         SELECT * FROM notifications INTO notification_data WHERE receiving_user=_user_id AND is_read=FALSE;
     ELSE
-        SELECT * FROM notifications WHERE receiving_user=_user_id;
+        SELECT * FROM notifications INTO notification_data WHERE receiving_user=_user_id;
     END IF;
 RETURN notification_data;
 END; $$ LANGUAGE 'plpgsql';
