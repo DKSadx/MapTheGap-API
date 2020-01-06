@@ -9,7 +9,8 @@ const client = require('../db/client').client
 router.get('/', (req, res) => {
 
     Promise.all([
-        client.query(`SELECT * FROM user_notifications(${req.userId}, FALSE)`),
+        //client.query(`SELECT * FROM user_notifications(${req.userId}, FALSE)`),
+        client.query(`SELECT * FROM notifications WHERE receiving_user=${req.userId};`),
         client.query(`SELECT * FROM user_notifications(${req.userId}, TRUE)`)
     ]).then(result => {
         console.log(result)

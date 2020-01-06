@@ -4,9 +4,9 @@ DECLARE
     notification_data notifications;
 BEGIN  
     IF _unread_only THEN
-        SELECT * FROM notifications INTO notification_data WHERE receiving_user=_user_id AND is_read=FALSE;
+        SELECT * FROM notifications WHERE receiving_user=_user_id AND is_read=FALSE INTO notification_data;
     ELSE
-        SELECT * FROM notifications INTO notification_data WHERE receiving_user=_user_id;
+        SELECT * FROM notifications WHERE receiving_user=_user_id INTO notification_data;
     END IF;
 RETURN notification_data;
 END; $$ LANGUAGE 'plpgsql';
