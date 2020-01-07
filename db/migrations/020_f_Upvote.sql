@@ -12,6 +12,6 @@ BEGIN
     ELSE
         DELETE FROM upvotes WHERE user_id=_user_id AND issue_id=_issue_id;
         
-        DELETE FROM notiifications WHERE user_id=_user_id AND issue_id=_issue_id;
+        DELETE FROM notifications WHERE user_id=_user_id AND issue_id=_issue_id;
     END IF;
 END; $$ LANGUAGE 'plpgsql'; 

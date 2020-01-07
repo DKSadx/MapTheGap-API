@@ -6,6 +6,8 @@ RETURNS TABLE (
     detailed_description TEXT, 
     proposed_solution TEXT, 
     images TEXT[], 
+    categories TEXT[],
+    delegate_to INT,
     solved BOOLEAN, 
     upvotes INT,
     upvoted BOOLEAN,
@@ -27,6 +29,8 @@ BEGIN
         i.detailed_description AS detailed_description,
         i.proposed_solution AS proposed_solution,
         i.images AS images,
+        CAST(ARRAY(SELECT a.name from categories a where a.id = ic.category_id) AS TEXT[]) AS categories,
+        i.delegate_to AS delegate_to,
         i.solved AS solved,
         CAST((SELECT COUNT(u.id) FROM upvotes u WHERE issue_id = _issue_id) AS INT) AS votes,
         (SELECT COUNT(u.id) = 1 FROM upvotes u WHERE issue_id = _issue_id AND user_id = _user_id) AS voted,
@@ -39,7 +43,7 @@ BEGIN
         u.avatar AS creator_avatar,
         i.created_at AS created_at
     FROM 
-        issues i, users u
+        issues i, users u, issue_category ic
     WHERE 
-        i.id = _issue_id AND i.created_by = u.id;
+        i.id = _issue_id AND i.created_by = u.id AND ic.issue_id = _issue_id;
 END; $$ LANGUAGE 'plpgsql'; 

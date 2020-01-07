@@ -27,7 +27,7 @@ BEGIN
 
     IF _categories IS NOT NULL THEN
 		FOREACH i IN ARRAY _categories LOOP
-			INSERT INTO issue_catogory (issue_id, category_id) VALUES (issue_data.id, i);
+			INSERT INTO issue_category (issue_id, category_id) VALUES (issue_data.id, i);
 		END LOOP;
 	END IF;
 

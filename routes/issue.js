@@ -44,7 +44,7 @@ router.post('/', (req, res) => {
         ${req.body.proposed_solution ? `'${req.body.proposed_solution}'` : null},
         ${req.body.images ? `'{${req.body.images}}'` : null},
         ${req.body.participate ? `'${req.body.participate}'` : null},
-        ${req.body.categories ? `'{${req.body.categories}'}` : null},
+        ${req.body.categories ? `'{${req.body.categories}}'` : null},
         ${req.body.delegate_to ? `${req.body.delegate_to}` : null},
         ${req.userId ? `'${req.userId}'` : null},
         ${req.body.location.coordinates[0] ? `${req.body.location.coordinates[0]}` : null},
@@ -219,6 +219,7 @@ router.delete('/:id/upvote', (req, res) => {
         })
     }).catch(error => {
         //Error
+        console.log(error)
         res.status(400).send({
             success: false,
             request_id: Math.random().toString(36).substring(3),
@@ -234,7 +235,6 @@ router.delete('/:id/upvote', (req, res) => {
 })
 
 router.post('/:id/support', (req, res) => {
-    console.log("djes")
     client.query(`SELECT support_issue(${req.userId}, ${req.params.id}, TRUE)`)
     .then(result => {
         res.status(200).send({
@@ -261,7 +261,7 @@ router.post('/:id/support', (req, res) => {
 })
 
 router.delete('/:id/support', (req, res) => {
-    client.query(`SELECT issue_support(${req.userId}, ${req.params.id}, FALSE)`)
+    client.query(`SELECT support_issue(${req.userId}, ${req.params.id}, FALSE)`)
     .then(result => {
         res.status(200).send({
             success: true, 
