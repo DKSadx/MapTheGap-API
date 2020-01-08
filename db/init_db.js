@@ -16,10 +16,6 @@ module.exports = async () => {
                 database: client.database,
                 defaultDatabase: process.env.POSTGRES_DATABASE, 
             }
-
-            return migrator.createDb(db_config.database, db_config)
-        })
-        .then(() => {
             console.log("djes2")
             return migrator.migrate(db_config, path.resolve(__dirname, 'migrations'))
         })
