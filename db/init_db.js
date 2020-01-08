@@ -14,6 +14,7 @@ module.exports = async () => {
                 host: client.host,
                 port: client.port,
                 database: client.database,
+                defaultDatabase: process.env.POSTGRES_DATABASE, 
             }
 
             return migrator.createDb(db_config.database, db_config)
