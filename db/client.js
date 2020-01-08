@@ -1,12 +1,9 @@
-const database_config = require('../config/database_config')
 const { Client } = require('pg')
 
-const client = new Client(database_config)
+const client = new Client(process.env.DATABASE_URL)
 
 function connect() {
-    client.connect().then(() => {
-        console.log("Database connected")
-    })
+    return client.connect()
 }
 
 function disconnect() {

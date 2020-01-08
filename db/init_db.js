@@ -1,17 +1,29 @@
-const database_config = require('../config/database_config')
-
 const migrator = require('postgres-migrations')
 const path = require('path')
-const client = require('./client')
+const client = require('./client').client
 
 
-module.exports = () => {
-    migrator.createDb(process.env.POSTGRES_DATABASE, database_config)
+module.exports = async () => {
+    db_config = {}
+
+    client.connect()
         .then(() => {
-            client.connect()
-            return migrator.migrate(database_config, path.resolve(__dirname, 'migrations'))
+            db_config = {
+                user: client.user,
+                password: client.password,
+                host: client.host,
+                port: client.port,
+                database: client.database,
+            }
+
+            return migrator.createDb(db_config.database, db_config)
         })
         .then(() => {
+            console.log("djes2")
+            return migrator.migrate(db_config, path.resolve(__dirname, 'migrations'))
+        })
+        .then(() => {
+            console.log("djes3")
             console.log("Migrations successful")
         })
         .catch(error => {

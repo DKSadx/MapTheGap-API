@@ -21,7 +21,6 @@ process.on("exit", code => {
 });
 
 //Database
-const database_config = require("./config/database_config");
 require("./db/init_db")();
 
 //Cloudinary config for image cloud
