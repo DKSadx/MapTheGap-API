@@ -1,11 +1,26 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const check_user_access_token = require('../middleware/check_user_access_token')
 
 const router = express.Router()
 
 //Postgres connection
 const client = require('../db/client').client
+
+//Node Mailer
+transporter = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: 465,
+    secure: true,
+
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD
+    }
+});
 
 //Endpoints
 router.post('/login', async (req, res) => {
@@ -58,6 +73,8 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
+    let r = Math.random().toString(36).substring(2);
+console.log("random", r);
     try {
         //Validation
         validateUser(req.body)
@@ -79,6 +96,19 @@ router.post('/register', async (req, res) => {
             ${req.body.areas? `'{${req.body.areas}}'` : null}
         );`)
 
+        if (req.body.user_type) {
+            verification_id = await client.query(`INSERT INTO user_verification(id, user_id) VALUES ('${crypto.randomBytes(15).toString('hex')}', ${sqlData.rows[0].id}) RETURNING id`)
+            console.log('hihi', verification_id.rows[0].id)
+
+            transporter.sendMail({
+                from: process.env.MAIL_USER,
+                to: req.body.email,
+                subject: "MTG - Verify email", 
+                html: `Click <a href="http://${req.get('host') + '/user/verify/' + verification_id.rows[0]}">here</a> to verify your e-mail address.`, 
+            });
+
+            console.log("djes")
+        }
 
         //Response
         res.status(200).send({
@@ -109,7 +139,7 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', check_user_access_token, (req, res) => {
     var sqlCommand = ""
     
     if (req.userId == req.params.id) {
@@ -148,6 +178,29 @@ router.get('/:id', (req, res) => {
     })
 })
 
+router.post('/verify/:id'), (req, res) => {
+    client.query(`SELECT verify_user(${req.params.id})`)
+        .then(result => {
+            //Response
+            res.status(200).send({
+                success: true,
+                request_id: Math.random().toString(36).substring(3),
+
+                data: {}
+            })
+        }).catch(error => {
+            //Error
+            res.status(400).send({
+                success: false,
+                request_id: Math.random().toString(36).substring(3),
+
+                data: {},
+                error: {
+                    message: error.detail
+                }
+            })
+        })
+}
     
 
 //Functions
@@ -173,11 +226,13 @@ const validateUser = data => {
     });
 
     //Validate Email
-    if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         .test(data.email)) throw { detail: "'email' is invalid"}
 
+    if (data.user_type == 4 && data.email.indexOf('gov') < data.email.indexOf('@')) throw { detail: "'email' is invalid"}
+
     //Validate phone number
-    if (!/^\+[0-9]{5,15}$/
+    if (!/^[0-9]{5,15}$/
         .test(data.phone_number)) throw { detail: "'phone_number' is invalid"}
 
     //Validate date of birth

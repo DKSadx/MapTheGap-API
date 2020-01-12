@@ -1,4 +1,6 @@
 const express = require('express')
+const check_user_access_token = require('../middleware/check_user_access_token')
+
 
 const router = express.Router()
 
@@ -7,7 +9,7 @@ const client = require('../db/client').client
 
 
 //Endpoints
-router.get('/:id', (req, res) => {
+router.get('/:id', check_user_access_token, (req, res) => {
     client.query(`SELECT * FROM detailed_issue(${req.params.id}, ${req.userId}) d`).then(result => {
         if (result.rows) {
             res.status(200).send({
@@ -36,7 +38,7 @@ router.get('/:id', (req, res) => {
     })
 })
 
-router.post('/', (req, res) => {
+router.post('/', check_user_access_token, (req, res) => {
     client.query(`SELECT * FROM create_issue(
         ${req.body.title ? `'${req.body.title}'` : null},
         ${req.body.short_description ? `'${req.body.short_description}'` : null},
@@ -76,7 +78,7 @@ router.post('/', (req, res) => {
     })
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', check_user_access_token, (req, res, next) => {
     client.query(
         `SELECT created_by FROM issue WHERE id=${req.params.id}`
     ).then(result => {
@@ -130,7 +132,7 @@ router.put('/:id', (req, res, next) => {
     })
 })
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', check_user_access_token, (req, res, next) => {
     client.query(
         `SELECT created_by FROM issues WHERE id=${req.params.id}`
     ).then(result => {
@@ -182,7 +184,7 @@ router.delete('/:id', (req, res, next) => {
         })
 })
 
-router.post('/:id/upvote', (req, res) => {
+router.post('/:id/upvote', check_user_access_token, (req, res) => {
     client.query(`SELECT vote(${req.userId}, ${req.params.id}, TRUE)`)
     .then(result => {
         res.status(200).send({
@@ -208,7 +210,7 @@ router.post('/:id/upvote', (req, res) => {
     })
 })
 
-router.delete('/:id/upvote', (req, res) => {
+router.delete('/:id/upvote', check_user_access_token, (req, res) => {
     client.query(`SELECT vote(${req.userId}, ${req.params.id}, FALSE)`)
     .then(result => {
         res.status(200).send({
@@ -234,7 +236,7 @@ router.delete('/:id/upvote', (req, res) => {
     })
 })
 
-router.post('/:id/support', (req, res) => {
+router.post('/:id/support', check_user_access_token, (req, res) => {
     client.query(`SELECT support_issue(${req.userId}, ${req.params.id}, TRUE)`)
     .then(result => {
         res.status(200).send({
@@ -260,7 +262,7 @@ router.post('/:id/support', (req, res) => {
     })
 })
 
-router.delete('/:id/support', (req, res) => {
+router.delete('/:id/support', check_user_access_token, (req, res) => {
     client.query(`SELECT support_issue(${req.userId}, ${req.params.id}, FALSE)`)
     .then(result => {
         res.status(200).send({

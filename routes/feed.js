@@ -1,4 +1,5 @@
 const express = require('express')
+const check_user_access_token = require('../middleware/check_user_access_token')
 
 const router = express.Router()
 
@@ -8,7 +9,7 @@ const client = require('../db/client').client
 
 
 //Endpoints
-router.get('/', (req, res) => {
+router.get('/', check_user_access_token, (req, res) => {
     sql_command =  `SELECT id FROM issues i`;
 
     if (req.query.user_id) {

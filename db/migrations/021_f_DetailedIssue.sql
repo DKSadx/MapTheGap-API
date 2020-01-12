@@ -17,6 +17,7 @@ RETURNS TABLE (
     latitude NUMERIC,
     creator_id INT,
     creator_name VARCHAR(63), 
+    creator_email VARCHAR(63),
     creator_avatar TEXT,
     created_at TIMESTAMP
 ) AS $$
@@ -40,6 +41,7 @@ BEGIN
         i.latitude AS latitude,
         u.id AS creator_id,
         u.name AS creator_name,
+        u.email AS creator_email,
         u.avatar AS creator_avatar,
         i.created_at AS created_at
     FROM 

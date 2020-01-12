@@ -1,4 +1,5 @@
 const express = require("express");
+const check_user_access_token = require('../middleware/check_user_access_token')
 const cloudinary = require("cloudinary");
 const router = express.Router();
 
@@ -6,7 +7,7 @@ const router = express.Router();
 const client = require("../db/client").client;
 
 //Endpoints
-router.post("/", (req, res) => {
+router.post("/", check_user_access_token, (req, res) => {
     const values = Object.values(req.files)
     const promises = values.map(image => cloudinary.uploader.upload(image.path))
 
@@ -36,5 +37,6 @@ router.post("/", (req, res) => {
             });
         })
 });
+
 //Export
 module.exports = router;

@@ -1,4 +1,5 @@
 const express = require('express')
+const check_user_access_token = require('../middleware/check_user_access_token')
 
 const router = express.Router()
 
@@ -6,7 +7,7 @@ const router = express.Router()
 const client = require('../db/client').client
 
 //Endpoints
-router.get('/', (req, res) => {
+router.get('/', check_user_access_token, (req, res) => {
 
     Promise.all([
         //client.query(`SELECT * FROM user_notifications(${req.userId}, FALSE)`),
@@ -40,7 +41,7 @@ router.get('/', (req, res) => {
     })
 })
     
-router.put('/', (req, res) => {
+router.put('/', check_user_access_token, (req, res) => {
     client.query(`SELECT * FROM read_notifications(${req.userId})`).then(result => {
         res.status(200).send({
             success: true, 
