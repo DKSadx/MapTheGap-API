@@ -26,6 +26,7 @@ module.exports = async () => {
         .catch(error => {
             console.log("Database migrations failed")
             console.log(error)
+            
 
             client.disconnect()
         })
