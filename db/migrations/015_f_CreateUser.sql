@@ -8,15 +8,16 @@ CREATE OR REPLACE FUNCTION create_user (
     _password VARCHAR(63),
     _company_type VARCHAR(255),
     _categories INT[],
-    _areas INT[]
+    _areas INT[],
+	_verified BOOLEAN
 ) RETURNS users AS $$ 
 
 DECLARE
 	user_data users;
 	i INT;
 BEGIN
-	INSERT INTO users (user_type, name, email, phone_number, address, date_of_birth, password, company_type) VALUES (
-		_user_type, _name, _email, _phone_number, _address, _date_of_birth, _password, _company_type
+	INSERT INTO users (user_type, name, email, phone_number, address, date_of_birth, password, company_type, verified) VALUES (
+		_user_type, _name, _email, _phone_number, _address, _date_of_birth, _password, _company_type, _verified
 	) RETURNING 
 		id, user_type, name, email, phone_number, address, date_of_birth, company_type, verified
 	INTO user_data;

@@ -12,6 +12,7 @@ const client = require('../db/client').client
 router.get('/:id', check_user_access_token, (req, res) => {
     client.query(`SELECT * FROM detailed_issue(${req.params.id}, ${req.userId}) d`).then(result => {
         if (result.rows) {
+            console.log(result.rows[0])
             res.status(200).send({
                 success: true, 
                 request_id: Math.random().toString(36).substring(3),
@@ -287,5 +288,56 @@ router.delete('/:id/support', check_user_access_token, (req, res) => {
     })
 })
 
+router.post('/:id/comment', check_user_access_token, (req, res) => {
+    client.query(`INSERT INTO issue_comments(user_id, issue_id, comment_text) VALUES (${req.userId}, ${req.params.id}, '${req.body.text}')`)
+        .then(result => {
+            res.status(200).send({
+                success: true, 
+                request_id: Math.random().toString(36).substring(3),
+
+                data: {}
+            })
+        }).catch(error => {
+            //Error
+            console.log(error)
+            res.status(400).send({
+                success: false,
+                request_id: Math.random().toString(36).substring(3),
+
+                data: {},
+
+                error: {
+                    message: error.detail,
+                    code: error.code
+                }
+            })
+        })
+})
+
+router.delete('/:issue_id/comment/:id', check_user_access_token, (req, res) => {
+    client.query(`DELETE FROM issue_comments WHERE user_id=${req.userId} AND issue_id=${req.params.issue_id} AND id=${req.params.id}`)
+        .then(result => {
+            res.status(200).send({
+                success: true, 
+                request_id: Math.random().toString(36).substring(3),
+
+                data: {}
+            })
+        }).catch(error => {
+            //Error
+            console.log(error)
+            res.status(400).send({
+                success: false,
+                request_id: Math.random().toString(36).substring(3),
+
+                data: {},
+
+                error: {
+                    message: error.detail,
+                    code: error.code
+                }
+            })
+        })
+})
 //Export
 module.exports = router

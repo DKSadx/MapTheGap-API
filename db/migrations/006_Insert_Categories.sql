@@ -1,41 +1,42 @@
-INSERT INTO categories(name) VALUES ('Agriculture & Livestock');
-INSERT INTO categories(name) VALUES ('Food & Related Products');
-INSERT INTO categories(name) VALUES ('Coffee bars, Clubs and Related services');
-INSERT INTO categories(name) VALUES ('Heavy Industry');
-INSERT INTO categories(name) VALUES ('Energy &amp; Raw Materials');
-INSERT INTO categories(name) VALUES ('Vehicles &amp; Transport');
-INSERT INTO categories(name) VALUES ('Chemical Industry');
-INSERT INTO categories(name) VALUES ('Construction');
-INSERT INTO categories(name) VALUES ('Public Works (Construction)');
-INSERT INTO categories(name) VALUES ('Public Works (Services)');
-INSERT INTO categories(name) VALUES ('Wood, Furniture and Other similar products');
-INSERT INTO categories(name) VALUES ('Leather, Textile &amp; Clothing');
-INSERT INTO categories(name) VALUES ('Information, Communication &amp; Technology');
-INSERT INTO categories(name) VALUES ('Telecommunications Industry');
-INSERT INTO categories(name) VALUES ('Photography, Printing &amp; Publishing');
-INSERT INTO categories(name) VALUES ('Luxury &amp; Leisure Products');
-INSERT INTO categories(name) VALUES ('Travel, Tourism &amp; Leisure');
-INSERT INTO categories(name) VALUES ('Marketing, Avdertising &amp; the Media');
-INSERT INTO categories(name) VALUES ('Banking, Finance &amp; Insurance');
-INSERT INTO categories(name) VALUES ('Legal services');
-INSERT INTO categories(name) VALUES ('Health');
-INSERT INTO categories(name) VALUES ('Education');
-INSERT INTO categories(name) VALUES ('Trading services');
-INSERT INTO categories(name) VALUES ('Sport');
-INSERT INTO categories(name) VALUES ('Ecology &amp; Environment');
-INSERT INTO categories(name) VALUES ('Youth &amp; Sport');
-INSERT INTO categories(name) VALUES ('Social protection of youngsters');
-INSERT INTO categories(name) VALUES ('Humanitarian aid');
-INSERT INTO categories(name) VALUES ('Research');
-INSERT INTO categories(name) VALUES ('Advocacy');
-INSERT INTO categories(name) VALUES ('Youth participatin in decission making');
-INSERT INTO categories(name) VALUES ('Culture and Art');
-INSERT INTO categories(name) VALUES ('Primary health protection and prevention');
-INSERT INTO categories(name) VALUES ('Youth employment &amp; Entrepreneuership');
-INSERT INTO categories(name) VALUES ('Rural development');
-INSERT INTO categories(name) VALUES ('Gender equality and LGBTQI rights');
-INSERT INTO categories(name) VALUES ('Marginalized groups');
-INSERT INTO categories(name) VALUES ('Handicrafts');
-INSERT INTO categories(name) VALUES ('Human rights');
-INSERT INTO categories(name) VALUES ('Youth rights');
-INSERT INTO categories(name) VALUES ('Agriculture');
+INSERT INTO categories(name) VALUES 
+    ('Agriculture & Livestock'),
+    ('Food & Related Products'),
+    ('Coffee bars, Clubs and Related services'),
+    ('Heavy Industry'),
+    ('Energy &amp, Raw Materials'),
+    ('Vehicles &amp, Transport'),
+    ('Chemical Industry'),
+    ('Construction'),
+    ('Public Works (Construction)'),
+    ('Public Works (Services)'),
+    ('Wood, Furniture and Other similar products'),
+    ('Leather, Textile &amp, Clothing'),
+    ('Information, Communication &amp, Technology'),
+    ('Telecommunications Industry'),
+    ('Photography, Printing &amp, Publishing'),
+    ('Luxury &amp, Leisure Products'),
+    ('Travel, Tourism &amp, Leisure'),
+    ('Marketing, Avdertising &amp, the Media'),
+    ('Banking, Finance &amp, Insurance'),
+    ('Legal services'),
+    ('Health'),
+    ('Education'),
+    ('Trading services'),
+    ('Sport'),
+    ('Ecology &amp, Environment'),
+    ('Youth &amp, Sport'),
+    ('Social protection of youngsters'),
+    ('Humanitarian aid'),
+    ('Research'),
+    ('Advocacy'),
+    ('Youth participatin in decission making'),
+    ('Culture and Art'),
+    ('Primary health protection and prevention'),
+    ('Youth employment &amp, Entrepreneuership'),
+    ('Rural development'),
+    ('Gender equality and LGBTQI rights'),
+    ('Marginalized groups'),
+    ('Handicrafts'),
+    ('Human rights'),
+    ('Youth rights'),
+    ('Agriculture');

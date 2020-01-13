@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION verify_user(_id INT)
+CREATE OR REPLACE FUNCTION verify_user(_id VARCHAR(31))
 RETURNS void AS $$
 BEGIN
     IF (SELECT count(id) FROM user_verification WHERE id = _id) > 0 THEN

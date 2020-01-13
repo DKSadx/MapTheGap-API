@@ -28,6 +28,7 @@ router.post('/login', async (req, res) => {
         `SELECT * FROM Users WHERE email='${req.body.email}'`
     ).then(async result => {
         if (result.rows[0] == undefined) throw {detail: "User does not exist"}
+        if (!result.rows[0].verified) throw {detail: "User is not verified"}
 
         //Check password
         if (await bcrypt.compare(req.body.password, result.rows[0].password)) {
@@ -93,7 +94,8 @@ console.log("random", r);
             ${req.body.password ? `'${req.body.password}'` : null},
             ${req.body.company_type ? `'${req.body.company_type}'` : null},
             ${req.body.categories ? `'{${req.body.categories}}'` : null},
-            ${req.body.areas? `'{${req.body.areas}}'` : null}
+            ${req.body.areas? `'{${req.body.areas}}'` : null},
+            ${req.body.user_type != 4}
         );`)
 
         if (req.body.user_type) {
@@ -104,7 +106,7 @@ console.log("random", r);
                 from: process.env.MAIL_USER,
                 to: req.body.email,
                 subject: "MTG - Verify email", 
-                html: `Click <a href="http://${req.get('host') + '/user/verify/' + verification_id.rows[0]}">here</a> to verify your e-mail address.`, 
+                html: `Click <a href="http://${req.get('host') + '/user/verify/' + verification_id.rows[0].id}">here</a> to verify your e-mail address.`, 
             });
 
             console.log("djes")
@@ -178,8 +180,9 @@ router.get('/:id', check_user_access_token, (req, res) => {
     })
 })
 
-router.post('/verify/:id'), (req, res) => {
-    client.query(`SELECT verify_user(${req.params.id})`)
+router.get('/verify/:id', (req, res) => {
+    console.log("dfje")
+    client.query(`SELECT verify_user('${req.params.id}')`)
         .then(result => {
             //Response
             res.status(200).send({
@@ -190,6 +193,7 @@ router.post('/verify/:id'), (req, res) => {
             })
         }).catch(error => {
             //Error
+            console.log(error)
             res.status(400).send({
                 success: false,
                 request_id: Math.random().toString(36).substring(3),
@@ -200,7 +204,7 @@ router.post('/verify/:id'), (req, res) => {
                 }
             })
         })
-}
+})
     
 
 //Functions
@@ -232,7 +236,7 @@ const validateUser = data => {
     if (data.user_type == 4 && data.email.indexOf('gov') < data.email.indexOf('@')) throw { detail: "'email' is invalid"}
 
     //Validate phone number
-    if (!/^[0-9]{5,15}$/
+    if (!/^(\+|[0-9]){5,15}$/
         .test(data.phone_number)) throw { detail: "'phone_number' is invalid"}
 
     //Validate date of birth
