@@ -95,6 +95,7 @@ console.log("random", r);
             ${req.body.company_type ? `'${req.body.company_type}'` : null},
             ${req.body.categories ? `'{${req.body.categories}}'` : null},
             ${req.body.areas? `'{${req.body.areas}}'` : null},
+            ${req.body.country? `'${req.body.country}'` : null},
             ${req.body.user_type != 4}
         );`)
 

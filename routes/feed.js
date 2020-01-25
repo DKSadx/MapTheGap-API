@@ -10,17 +10,13 @@ const client = require('../db/client').client
 
 //Endpoints
 router.get('/', check_user_access_token, (req, res) => {
-    sql_command =  `SELECT id FROM issues i`;
+    sql_command =  `SELECT i.id, u.country FROM issues i, users u WHERE u.id=${req.userId} `;
 
     if (req.query.user_id) {
-        sql_command += ' WHERE ';
+        sql_command += ` AND i.created_by=${req.query.user_id} `;
     }
 
-    if (req.query.user_id) {
-        sql_command += ` i.created_by=${req.query.user_id} `;
-    }
-
-    sql_command = `SELECT * FROM (${sql_command}) a, detailed_issue(a.id, ${req.userId}) b `;
+    sql_command = `SELECT * FROM (${sql_command}) a, detailed_issue(a.id, ${req.userId}) b WHERE b.country = a.country`;
 
     if (req.query.sort_by) {
         const sort_var = req.query.sort_by.substring(0, req.query.sort_by.indexOf(':'))
