@@ -85,12 +85,14 @@ console.log("random", r);
         
 
         //Get contry from address
-        if (req.body.address.contains('Bosnia and Herzegovina')) req.body.country = 'Bosnia and Herzegovina'
-        if (req.body.address.contains('Rep. North Macedonia')) req.body.country = 'Rep. North Macedonia'
-        if (req.body.address.contains('Serbia')) req.body.country = 'Serbia'
-        if (req.body.address.contains('Poland')) req.body.country = 'Poland'
-        if (req.body.address.contains('Slovenia')) req.body.country = 'Slovenia'
-        if (req.body.address.contains('Montenegro')) req.body.country = 'Montenegro'
+        if (req.body.country) {
+            if (req.body.address.contains('Bosnia and Herzegovina')) req.body.country = 'Bosnia and Herzegovina'
+            if (req.body.address.contains('Rep. North Macedonia')) req.body.country = 'Rep. North Macedonia'
+            if (req.body.address.contains('Serbia')) req.body.country = 'Serbia'
+            if (req.body.address.contains('Poland')) req.body.country = 'Poland'
+            if (req.body.address.contains('Slovenia')) req.body.country = 'Slovenia'
+            if (req.body.address.contains('Montenegro')) req.body.country = 'Montenegro'    
+        }
         
         //Save to DB
         var sqlData = await client.query(`SELECT * FROM create_user (
