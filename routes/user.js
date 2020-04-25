@@ -247,7 +247,7 @@ const validateUser = data => {
     if (data.user_type == 4 && data.email.indexOf('gov') < data.email.indexOf('@')) throw { detail: "'email' is invalid"}
 
     //Validate phone number
-    if (!/^[\+0-9][0-9]{5,20}/.test(data.phone_number)) throw { detail: "'phone_number' is invalid"}
+    if (!/^[\+0-9][0-9]{5,20}$/.test(data.phone_number)) throw { detail: "'phone_number' is invalid"}
 
     //Validate date of birth
     if (data.dateOfBirth != null && !/^(?:(?:[13579][26]00|[02468][048]00|\d\d(?:0[48]|[2468][048]|[13579][26]))-(?:02-(?:0[1-9]|[12]\d)|(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30))|\d{4}-(?:02-(?:0[1-9]|1\d|2[0-8])|(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)))$/
