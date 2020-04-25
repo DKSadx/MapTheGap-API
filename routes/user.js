@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
     let r = Math.random().toString(36).substring(2);
-console.log("random", r);
+    
     try {
         //Validation
         validateUser(req.body)
@@ -85,13 +85,14 @@ console.log("random", r);
         
 
         //Get contry from address
-        if (req.body.country) {
-            if (req.body.address.contains('Bosnia and Herzegovina')) req.body.country = 'Bosnia and Herzegovina'
-            if (req.body.address.contains('Rep. North Macedonia')) req.body.country = 'Rep. North Macedonia'
-            if (req.body.address.contains('Serbia')) req.body.country = 'Serbia'
-            if (req.body.address.contains('Poland')) req.body.country = 'Poland'
-            if (req.body.address.contains('Slovenia')) req.body.country = 'Slovenia'
-            if (req.body.address.contains('Montenegro')) req.body.country = 'Montenegro'    
+        if (!req.body.country) {
+            if (req.body.address.indexOf('Bosnia and Herzegovina') != -1) req.body.country = 'Bosnia and Herzegovina'
+            if (req.body.address.indexOf('Rep. North Macedonia') != -1) req.body.country = 'Rep. North Macedonia'
+            if (req.body.address.indexOf('Serbia') != -1) req.body.country = 'Serbia'
+            if (req.body.address.indexOf('Poland') != -1) req.body.country = 'Poland'
+            if (req.body.address.indexOf('Slovenia') != -1) req.body.country = 'Slovenia'
+            if (req.body.address.indexOf('Italy') != -1) req.body.country = 'Italy'
+            if (req.body.address.indexOf('Turkey') != -1) req.body.country = 'Turkey'  
         }
         
         //Save to DB
@@ -107,12 +108,12 @@ console.log("random", r);
             ${req.body.categories ? `'{${req.body.categories}}'` : null},
             ${req.body.areas? `'{${req.body.areas}}'` : null},
             ${req.body.country? `'${req.body.country}'` : null},
-            ${req.body.user_type != 4}
+            ${req.body.user_type == 4}
         );`)
 
-        if (req.body.user_type) {
+        if (req.body.user_type != 4) {
+            console.log("djes")
             verification_id = await client.query(`INSERT INTO user_verification(id, user_id) VALUES ('${crypto.randomBytes(15).toString('hex')}', ${sqlData.rows[0].id}) RETURNING id`)
-            console.log('hihi', verification_id.rows[0].id)
 
             transporter.sendMail({
                 from: process.env.MAIL_USER,
@@ -121,7 +122,6 @@ console.log("random", r);
                 html: `Click <a href="http://${req.get('host') + '/user/verify/' + verification_id.rows[0].id}">here</a> to verify your e-mail address.`, 
             });
 
-            console.log("djes")
         }
 
         //Response
@@ -193,7 +193,6 @@ router.get('/:id', check_user_access_token, (req, res) => {
 })
 
 router.get('/verify/:id', (req, res) => {
-    console.log("dfje")
     client.query(`SELECT verify_user('${req.params.id}')`)
         .then(result => {
             //Response
@@ -248,8 +247,7 @@ const validateUser = data => {
     if (data.user_type == 4 && data.email.indexOf('gov') < data.email.indexOf('@')) throw { detail: "'email' is invalid"}
 
     //Validate phone number
-    if (!/^(\+|[0-9]){5,15}$/
-        .test(data.phone_number)) throw { detail: "'phone_number' is invalid"}
+    if (!/^[\+0-9][0-9]{5,20}/.test(data.phone_number)) throw { detail: "'phone_number' is invalid"}
 
     //Validate date of birth
     if (data.dateOfBirth != null && !/^(?:(?:[13579][26]00|[02468][048]00|\d\d(?:0[48]|[2468][048]|[13579][26]))-(?:02-(?:0[1-9]|[12]\d)|(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30))|\d{4}-(?:02-(?:0[1-9]|1\d|2[0-8])|(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)))$/
