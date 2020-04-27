@@ -216,6 +216,69 @@ router.get('/verify/:id', (req, res) => {
             })
         })
 })
+
+router.put('/', check_user_access_token, async (req, res) => {
+    try {
+        //Validation
+        if (req.body.name != undefined && req.body.name.length > 63) throw { detail: "'name' needs to be shorter then 63 characters"}
+        if (req.body.email != undefined && (req.body.email.length > 255 
+            || !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            .test(req.body.email))) throw { detail: "'email' needs to be shorter then 255 characters"}
+        if (req.body.address != undefined && req.body.address.length > 255) throw { detail: "'address' needs to be shorter then 255 characters"}
+        if (req.body.company_type != undefined && req.body.company_type != undefined && req.body.company_type.length > 255) throw { detail: "'company_type' needs to be shorter then 255 characters"}
+        if (req.body.areas != undefined) req.body.areaOfAction.forEach((element, index) => {
+            if (element.length > 255) throw { detail: `'areas[${index}]' needs to be shorter then 255 characters`}
+        });
+        if (req.body.categories != undefined) req.body.categories.forEach((element, index) => {
+            if (element.length > 255) throw { detail: `'categories[${index}]' needs to be shorter then 255 characters`}
+        });
+        if (req.body.phone_number != undefined && !/^[\+0-9][0-9]{5,20}$/.test(data.phone_number)) throw { detail: "'phone_number' is invalid"}
+
+        
+        //Save to DB
+        var sqlData = await client.query(`update users set updated_at = NOW()
+            ${req.body.name !== undefined ? `, name = '${req.body.name}'` : ''}
+            ${req.body.email !== undefined ? `, email = '${req.body.email}'` : ''}
+            ${req.body.phone_number !== undefined ? `, phone_number = '${req.body.phone_number}'` : ''}
+            ${req.body.address !== undefined ? `, address = '${req.body.address}'` : ''}
+            ${req.body.date_of_birth !== undefined ? `, date_of_birth = '${req.body.date_of_birth}'` : ''}
+            ${req.body.company_type !== undefined ? `, company_type = '${req.body.company_type}'` : ''}
+            ${req.body.categories !== undefined ? `, categories = '{${req.body.categories}}'` : ''}
+            ${req.body.areas !== undefined ? `, areas = '{${req.body.areas}}'` : ''}
+            ${req.body.country !== undefined ? `, country = '${req.body.country}'` : ''}
+            where id = ${req.userId} returning id, user_type, name, email, phone_number, address, date_of_birth, avatar, company_type, verified, country
+        `)
+
+
+
+        //Response
+        res.status(200).send({
+            
+            success: true,
+            request_id: Math.random().toString(36).substring(10),
+
+            data: {
+                user: sqlData.rows[0]
+            }
+        })
+
+        
+    } catch (error) {
+        console.log(error)
+        //Error
+        res.status(400).send({
+            success: false,
+            request_id: Math.random().toString(36).substring(3),
+
+            data: {},
+
+            error: {
+                message: error.detail,
+                code: error.code
+            }
+        })
+    }
+})
     
 
 //Functions
@@ -254,6 +317,9 @@ const validateUser = data => {
         .test(data.date_of_birth)) throw { detail: "'date_of_birth' is invalid"}
 }
 
+const lenght_check = data => {
+    
+}
 
 //Export
 module.exports = router

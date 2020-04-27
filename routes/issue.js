@@ -238,7 +238,7 @@ router.delete('/:id/upvote', check_user_access_token, (req, res) => {
 })
 
 router.post('/:id/support', check_user_access_token, (req, res) => {
-    client.query(`SELECT support_issue(${req.userId}, ${req.params.id}, TRUE)`)
+    client.query(`SELECT support_issue(${req.params.id}, ${req.userId, TRUE})`)
     .then(result => {
         res.status(200).send({
             success: true, 
