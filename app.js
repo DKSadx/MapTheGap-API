@@ -45,15 +45,15 @@ const notification_type_routes = require("./routes/notification_type")
 const notification_router = require("./routes/notifications")
 
 //Routes
-app.use("/user", user_routes);
-app.use("/issue", issue_routes);
-app.use("/feed", feed_routes);
-app.use("/user_type", user_type_routes);
-app.use("/image-upload", image_upload_routes);
-app.use("/category", category_routes);
-app.use("/area", area_routes);
-app.use("/notification_type", notification_type_routes);
-app.use("/notifications", notification_router);
+app.use("/api/user", user_routes);
+app.use("/api/issue", issue_routes);
+app.use("/api/feed", feed_routes);
+app.use("/api/user_type", user_type_routes);
+app.use("/api/image-upload", image_upload_routes);
+app.use("/api/category", category_routes);
+app.use("/api/area", area_routes);
+app.use("/api/notification_type", notification_type_routes);
+app.use("/api/notifications", notification_router);
 
 //Listen port
 app.listen(port, () => {
