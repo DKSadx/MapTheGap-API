@@ -19,7 +19,7 @@
     "express-form-data": "2.0.10",
     "jsonwebtoken": "8.5.1",
     "mail": "0.2.3",
-    "nodemailer": "6.4.2",
+    "nodemailer": "6.6.1",
     "nodemon": "1.19.3",
     "pg": "7.14.0",
     "postgrator": "3.11.0",
